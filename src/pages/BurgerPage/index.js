@@ -90,6 +90,7 @@ class BurgerBuilder extends Component {
         for (let prop in this.state.ingredients) {
           param.push(prop + "=" + this.state.ingredients[prop]);
         }
+        param.push("total_price=" + this.state.total_price);
         const query = param.join("&");
         this.props.history.push({
           pathname: "/ship",
