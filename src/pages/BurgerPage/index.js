@@ -23,20 +23,17 @@ class BurgerBuilder extends Component {
 
   state = {
     ingredients: {
-      ingredients: {
-        ingredients: {
-          salad: 0,
-          cheese: 0,
-          bacon: 0,
-          meat: 0
-        },
-        total_price: 0,
-        purchaseing: false,
-        confirm_order: false,
-        last_custname: "",
-        loading: false
-      };
-
+      salad: 0,
+      cheese: 0,
+      bacon: 0,
+      meat: 0
+    },
+    total_price: 0,
+    purchaseing: false,
+    confirm_order: false,
+    last_custname: "",
+    loading: false
+  };
       addIngredient = (type) => {
         const newIngredients = { ...this.state.ingredients };
         newIngredients[type]++;
