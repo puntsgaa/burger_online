@@ -23,6 +23,7 @@ class OrderPage extends Component {
     }
 
     render() {
+        console.log(this.state.orders);
         return <div>{this.state.loading ?
             (<Spinner />) : (
                 this.state.orders.map((el) => {
