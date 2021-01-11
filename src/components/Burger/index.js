@@ -2,6 +2,7 @@ import React from "react";
 import BurgerIngredient from "../Burgeringredient";
 import css from './style.module.css';
 import { withRouter } from "react-router-dom";
+import { connect } from "react-redux";
 function Burger(props) {
     const items = Object.entries(props.ingredients);
     var content = [];
@@ -22,4 +23,10 @@ function Burger(props) {
     );
 }
 
-export default withRouter(Burger);
+const mapStateToProps = (state) =>{
+    return{
+        ingredients: state.ingredients
+    }
+}
+
+export default connect(mapStateToProps)(withRouter(Burger));

@@ -1,6 +1,7 @@
 import React from 'react';
 import css from './style.module.css';
 import Button from '../General/Button';
+import { connect } from "react-redux";
 const OrderSummary = props => {
     return(<div className={css}>
             <h3>Таны захиалга</h3>
@@ -18,4 +19,12 @@ const OrderSummary = props => {
     );
 };
 
-export default OrderSummary;
+const mapStateToProps = (state) => {
+    return {
+        ingredients: state.ingredients,
+        controls: state.controls,
+        total_price: state.total_price
+    }
+}
+
+export default connect(mapStateToProps)(OrderSummary);
