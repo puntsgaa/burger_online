@@ -6,6 +6,10 @@ import SideBar from '../../components/SideBar';
 import OrderPage from "../OrderPage";
 import { Route, Switch } from 'react-router-dom';
 import ShippingPage from '../ShippingPage';
+import LoginPage from "../LoginPage";
+import SignupPage from "../SignupPage";
+import { connect } from "react-redux";
+import Logout from "../../components/Logout";
 class App extends Component {
   state = {
     showSiderBar: false
@@ -22,7 +26,11 @@ class App extends Component {
         <Toolbar toggleSideBar={this.toggleSideBar} />
         <SideBar showSiderBar={this.state.showSiderBar} toggleSideBar={this.toggleSideBar} />
         <main className={css.Content}>
+           <center>Userid : { this.props.userid }</center> 
           <Switch>
+            <Route path="/login" component={LoginPage} />
+            <Route path="/logout" component={Logout} />
+            <Route path="/signup" component={SignupPage} />
             <Route path="/orders" component={OrderPage} />
             <Route path="/ship" component={ShippingPage} />
             <Route path="/" component={BurgerPage} />
@@ -33,4 +41,11 @@ class App extends Component {
   }
 }
 
-export default App;
+const mapStateToProps = (state) => {
+  return{
+    userid: state.SignupReducer.userid,
+    token: state.SignupReducer.token
+  }
+}
+
+export default connect(mapStateToProps)(App);

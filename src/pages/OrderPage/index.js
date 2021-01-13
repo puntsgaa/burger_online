@@ -1,36 +1,44 @@
 import React, { Component } from "react";
-import axios from "../../axios-orders";
-//import css from "./style.module.css";
 import Spinner from "../../components/General/Spinner";
 import Order from "../../components/Order";
+import { connect } from "react-redux";
+import * as actions from "../../redux/actions/orderActions";
 class OrderPage extends Component {
-    state = {
-        orders: [],
-        loading: false
-    }
 
     componentDidMount = () => {
-        this.setState({ loading: true });
-        axios
-            .get("/orders.json")
-            .then(response => {
-                if (response.data) {
-                    this.setState({ orders: Object.entries(response.data).reverse() });
-                }
-            }).catch(err => console.log(err)).finally(() => {
-                this.setState({ loading: false })
-            });
+        // this.setState({ loading: true });
+        // axios
+        //     .get("/orders.json")
+        //     .then(response => {
+        //         if (response.data) {
+        //             this.setState({ orders: Object.entries(response.data).reverse() });
+        //         }
+        //     }).catch(err => console.log(err)).finally(() => {
+        //         this.setState({ loading: false })
+        //     });
+        this.props.loadOrder();
     }
-
     render() {
-        console.log(this.state.orders);
-        return <div>{this.state.loading ?
+        return <div>{this.props.loading ?
             (<Spinner />) : (
-                this.state.orders.map((el) => {
+                this.props.orders.map((el) => {
                     return <Order key={el[0]} order={el[1]} />;
                 }))
         }</div>;
     }
 }
 
-export default OrderPage;
+const mapStateToProps = (state) =>{
+    return{
+        orders: state.orderReducer.orders,
+        loading: state.orderReducer.loading
+    };
+};
+
+const mapDispatchToProps = (dispatch) =>{
+    return{
+        loadOrder: () => dispatch(actions.loadOrders())
+    };
+};
+
+export default connect(mapStateToProps,mapDispatchToProps)(OrderPage);

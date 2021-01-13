@@ -30,7 +30,7 @@ export class ShippingPage extends Component {
 
 const mapStateToProps = (state) =>{
     return{
-        total_price: state.total_price
+        total_price: state.burgerReducer.total_price
     }
 }
 

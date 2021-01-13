@@ -4,11 +4,33 @@ import './index.css';
 import App from './pages/App';
 import reportWebVitals from './reportWebVitals';
 import { BrowserRouter } from "react-router-dom";
-import { createStore } from "redux";
+import { createStore,applyMiddleware,compose,combineReducers } from "redux";
 import { Provider } from "react-redux";
+import thunk from "redux-thunk";
 import reducer from "./redux/reducer/burgerReducer";
+import orderReducer from "./redux/reducer/orderReducer";
+import SignupReducer from "./redux/reducer/SignupReducer";
 
-const store = createStore(reducer);
+const logger = (store) =>{
+  return (next) => {
+    return (action) => {
+      console.log("MyLogMiddlerware : Dispatching ===>", action);
+      console.log("MyLogMiddlerware : Before state",store.getState());
+      const result = next(action);
+      console.log("MyLogMiddlerware : After state",store.getState());
+      return result;
+    }
+  }
+}
+const reducers = combineReducers({
+        burgerReducer: reducer,
+        orderReducer: orderReducer,
+        SignupReducer: SignupReducer, 
+});
+
+const middleWares = [logger,thunk];
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+const store = createStore(reducers,composeEnhancers(applyMiddleware(...middleWares)));
 
 ReactDOM.render(
  <React.StrictMode>

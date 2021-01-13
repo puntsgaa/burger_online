@@ -1,17 +1,16 @@
 import React, { Component } from "react";
 import Button from "../General/Button";
 import css from "./style.module.css";
-import axios from "../../axios-orders";
 import Spinner from '../../components/General/Spinner';
 import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
+import * as actions from "../../redux/actions/orderActions";
 class Contact extends Component{
     state={
         total_price:0,
         city:null,
         name:null,
-        street:null,
-        loading:false
+        street:null
     }
 
     changeName = (e) =>{
@@ -26,8 +25,15 @@ class Contact extends Component{
         this.setState({city: e.target.value});
     }
 
+    componentDidUpdate() {
+      if(this.props.newOrderStatus.finished === true && this.props.newOrderStatus.error === null){
+        this.props.history.replace("/orders");
+      }
+    };
+
     saveOrder = () =>{
       const order = {
+            userid: this.props.userId,
             ingredients: this.props.ingredients,
             total_price: this.props.total_price,
             address: {
@@ -36,25 +42,15 @@ class Contact extends Component{
               street: this.state.street
             }
           }
-          this.setState({ loading: true });
-          axios
-            .post("/orders.json", order)
-            .then(response => {
-              console.log("success");
-            })
-            .catch((error) => {
-              console.log("failed: " + error);
-            }).finally(() => {
-                this.setState({ loading: false });
-                this.props.history.replace("/orders");    
-            });
+          this.props.saveOrderAction(order);
     }
 
     render(){
         return(
             <div className={css.Contact}>
                 Нийт үнэ: {this.props.total_price}
-                {this.state.loading ? <Spinner/> : (<div>
+                <div>{this.props.newOrderStatus.error && `Захиалгыг хадгалах явцад алдаа гарлаа : " ${this.props.newOrderStatus.error}`}</div>
+                {this.props.newOrderStatus.saving ? <Spinner/> : (<div>
                 <input onChange={this.changeName} type="text" name="name" placeholder="Таны нэр"/>
                 <input onChange={this.changeStreet} type="text" name="street" placeholder="Таны гэрийн хаяг"/>
                 <input onChange={this.changeCity} type="text" name="city" placeholder="Хот"/>
@@ -67,9 +63,17 @@ class Contact extends Component{
 
 const mapStateToProps = (state) => {
   return{
-    total_price: state.total_price,
-    ingredients: state.ingredients
-  }
-} 
+    total_price: state.burgerReducer.total_price,
+    ingredients: state.burgerReducer.ingredients,
+    newOrderStatus: state.orderReducer.newOrder,
+    userId: state.SignupReducer.userid
+  };
+} ;
 
-export default connect(mapStateToProps)(withRouter(Contact));
+const mapDispatchToProps = (dispatch) =>{
+  return{
+    saveOrderAction: (newOrder) => dispatch(actions.saveOrder(newOrder))
+  }
+};
+
+export default connect(mapStateToProps,mapDispatchToProps)(withRouter(Contact));
