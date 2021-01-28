@@ -1,4 +1,5 @@
 import axios from "../../axios-orders";
+import * as actions from "./SignupActions";
 export const login = (email, password) => {
     return function(dispatch){
         dispatch(loginStart());
@@ -9,7 +10,17 @@ export const login = (email, password) => {
         }
         axios.post("https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyArBiUpT4tx-g9WtRgMkMH1ydpcErhC-Ec",data)
         .then(result => {
-                dispatch(loginSuccess(result.data));
+                const token = result.data.idToken;
+                const userId = result.data.localId;
+                const expiresIn = result.data.expiresIn;
+                const refreshToken = result.data.refreshToken;
+                const expireDate = new Date(new Date().getTime() + expiresIn * 1000);
+                localStorage.setItem('token',token);
+                localStorage.setItem('userId',userId);
+                localStorage.setItem('expireDate',expireDate);
+                localStorage.setItem('refreshToken',refreshToken);
+                dispatch(loginSuccess(token, userId));
+                dispatch(actions.AutoLogout(expiresIn * 1000));
         })
         .catch(err =>{
                 dispatch(loginFail(err));
@@ -23,10 +34,11 @@ export const loginStart = () => {
     }
 };
 
-export const loginSuccess = (result) => {
+export const loginSuccess = (token, userId) => {
     return{
         type: "LOGIN_SUCCESS",
-        payload: result
+        token: token,
+        userId: userId
     }
 }
 

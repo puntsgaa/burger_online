@@ -16,7 +16,7 @@ class OrderPage extends Component {
         //     }).catch(err => console.log(err)).finally(() => {
         //         this.setState({ loading: false })
         //     });
-        this.props.loadOrder();
+        this.props.loadOrder(this.props.userid);
     }
     render() {
         return <div>{this.props.loading ?
@@ -31,13 +31,14 @@ class OrderPage extends Component {
 const mapStateToProps = (state) =>{
     return{
         orders: state.orderReducer.orders,
-        loading: state.orderReducer.loading
+        loading: state.orderReducer.loading,
+        userid: state.SignupReducer.userid
     };
 };
 
 const mapDispatchToProps = (dispatch) =>{
     return{
-        loadOrder: () => dispatch(actions.loadOrders())
+        loadOrder: (userid) => dispatch(actions.loadOrders(userid))
     };
 };
 

@@ -1,10 +1,11 @@
 import axios from "../../axios-orders";
-export const loadOrders = () =>{
-    return function (dispatch) {
+export const loadOrders = (userid) =>{
+    return function (dispatch, getState) {
         //Loading start
         dispatch(loadStart());
-         axios
-            .get("/orders.json")
+        const token = getState().SignupReducer.token;
+        axios
+            .get(`orders.json?&auth=${token}&orderBy="userid"&equalTo="${userid}"`)
             .then(response => {
                 dispatch(loadSuccess(Object.entries(response.data).reverse()));
             }).catch(err => dispatch(loadFail(err)));
@@ -33,10 +34,11 @@ export const loadFail = (error) =>{
 };
 //Захиалгыг хадгалах хэсэг
 export const saveOrder = (newOrder) =>{
-   return function(dispatch){
+   return function(dispatch, getState){
          dispatch(orderSaveStart());
+         const token = getState().SignupReducer.token;
          axios
-            .post("/orders.json", newOrder)
+            .post(`/orders.json?auth=${token}`, newOrder)
             .then(response => {
               dispatch(orderSuccess());
             })
