@@ -24,7 +24,7 @@ class App extends Component {
     });
   }
 
-  componentDidMount = () =>{
+  componentDidMount = () => {
     const token = localStorage.getItem("token");
     const userId = localStorage.getItem("userId");
     const expireDate = new Date(localStorage.getItem("expireDate"));
@@ -32,7 +32,7 @@ class App extends Component {
     if(token){
       if(expireDate > new Date()){
         this.props.autoLogin(token,userId);
-        this.props.autoLogout(expireDate.getTime() - new Date().getTime);
+        this.props.autoLogout(expireDate.getTime() - new Date().getTime());
       }
       else{
        this.props.logout(); 
