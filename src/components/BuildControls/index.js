@@ -1,11 +1,12 @@
-import React from "react";
+import React, { useContext } from "react";
 import css from "./style.module.css";
 import BuildControl from "../BuildControl";
-import { connect } from "react-redux";
-import * as actions from "../../redux/actions/burgerActions";
+//import { connect } from "react-redux";
+//import * as actions from "../../redux/actions/burgerActions";
+import BurgerContext from "../../context/BurgerContext";
 const BuildControls = (props) => {
-    
-   const disabledIngredients = { ...props.ingredients }
+   const burgerContext = useContext(BurgerContext);
+   const disabledIngredients = { ...burgerContext.burger.ingredients }
         for (var key in disabledIngredients) {
           if (disabledIngredients[key] <= 0) {
             disabledIngredients[key] = true;
@@ -15,20 +16,20 @@ const BuildControls = (props) => {
           }
         }
 
-    return (<div className={css.BuildControls}>
-    <p>Бургер үнэ : <strong>{props.price}</strong></p>
-    {Object.keys(props.controls).map(el =>(
+    return (<div className={css.BuildControls}> 
+    <p>Бургер үнэ : <strong>{burgerContext.burger.total_price}</strong></p>
+    {Object.keys(burgerContext.burger.controls).map(el =>(
             <BuildControl 
             key = {el}
             disabled={disabledIngredients} 
-            addIngredient={props.addIngredient} 
-            removeIngredient={props.removeIngredient} 
+            /*addIngredient={props.addIngredient} 
+            removeIngredient={props.removeIngredient}*/ 
             type={el} 
-            orts={props.controls[el]}/>
+            orts={burgerContext.burger.controls[el]}/>
       ))
      }
       <button 
-         disabled={!props.disabled} 
+         disabled={!burgerContext.burger.purchaseing} 
          onClick={props.showConfirmModal} 
          className={css.OrderButton}>
             Захиалах
@@ -36,8 +37,8 @@ const BuildControls = (props) => {
       </div>
    );
 }
-
-const mapStateToProps = state => {
+export default BuildControls;
+/*const mapStateToProps = state => {
    return {
      ingredients: state.burgerReducer.ingredients,
      price: state.burgerReducer.total_price,
@@ -53,4 +54,4 @@ const mapStateToProps = state => {
    };
  };
  
-export default connect(mapStateToProps,mapDispatchToProps)(BuildControls);
+export default connect(mapStateToProps,mapDispatchToProps)(BuildControls);*/

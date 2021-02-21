@@ -1,58 +1,50 @@
-import React, { Component } from 'react'
+import React, { useState,useEffect } from 'react'
 import { connect } from "react-redux";
 import Button from "../../components/General/Button";
 import css from "./style.module.css";
 import * as actions from "../../redux/actions/SignupActions";
 import Spinner from "../../components/General/Spinner";
 import { Redirect } from "react-router-dom";
-class SignupPage extends Component {
-    state = {
-        email: "",
-        password1: "",
-        password2: "",
-        error: ""
-    };
-    
-    Signup = () =>{
-        if(this.state.password1 === this.state.password2){
-            this.props.singupUser(this.state.email,this.state.password1);
+const SignupPage = (props) => {
+    const [email, setEmail] = useState("");
+    const [password1, setPassword1] = useState("");
+    const [password2, setPassword2] = useState("");
+    const [error, setError] = useState("");
+    const [validate, setValidEmail] = useState(false);
+
+    useEffect(() => {
+        const pattern = new RegExp(/^(("[\w-\s]+")|([\w-]+(?:\.[\w-]+)*)|("[\w-\s]+")([\w-]+(?:\.[\w-]+)*))(@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$)|(@\[?((25[0-5]\.|2[0-4][0-9]\.|1[0-9]{2}\.|[0-9]{1,2}\.))((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){2}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\]?$)/i);
+        if(pattern.test(email)){
+            setValidEmail((beforeState) => !beforeState);
         }
-        else if(this.state.password1 !== this.state.password2){
-            this.setState({error:"Нууц үг хоорондоо таарахгүй байна."});
+        console.log("validate is:" + validate);
+    }, [email])
+
+
+    const Signup = () =>{
+        if(password1 === password2){
+            props.singupUser(email,password1);
         }
+        else if(password1 !== password2){
+            setError("Нууц үг хоорондоо таарахгүй байна.");
+      }
     }
 
-    emailChange = (e) => {
-        this.setState({ email: e.target.value });
-    };
-
-    passChange1 = (e) => {
-        this.setState({ password1: e.target.value });
-    };
-
-    passChange2 = (e) => {
-        this.setState({ password2: e.target.value });
-    };
-
-
-    render() {
         return (
             <div className={css.Signup}>
-                { this.props.userid && <Redirect to="/"/> }
+                { props.userid && <Redirect to="/"/> }
                 <h1>Бүртгэлийн форм</h1>
                 <div>Та бүртгэлийн мэдээлэлээ оруулна уу</div>
-                <input type="text" onChange={this.emailChange} placeholder="емэйл хаяг" />
-                <input type="password" onChange={this.passChange1} placeholder="нууц үг" />
-                <input type="password" onChange={this.passChange2} placeholder="нууц үг давтах" />
-                { this.state.error && <div className={css.Error}>{this.state.error}</div> }
-                { this.props.loading && <Spinner/> }
-                { this.props.error && <div className={css.Error}>{this.props.error}</div> }
-                <Button text="Бүртгүүлэх" btntype="Success" function={this.Signup} />
+                <input type="text" onChange={e => setEmail(e.target.value)} placeholder="емэйл хаяг" />
+                <input type="password" onChange={e => setPassword1(e.target.value)} placeholder="нууц үг" />
+                <input type="password" onChange={e => setPassword2(e.target.value)} placeholder="нууц үг давтах" />
+                { error && <div className={css.Error}>{error}</div> }
+                { props.loading && <Spinner/> }
+                { props.error && <div className={css.Error}>{props.error}</div> }
+                <Button text="Бүртгүүлэх" btntype="Success" function={Signup} />
             </div>
-        )
+        );
     }
-}
-
 const mapStateToProps = (state) => {
     return{
         loading: state.SignupReducer.loading,

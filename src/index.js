@@ -14,10 +14,10 @@ import SignupReducer from "./redux/reducer/SignupReducer";
 const logger = (store) =>{
   return (next) => {
     return (action) => {
-      console.log("MyLogMiddlerware : Dispatching ===>", action);
-      console.log("MyLogMiddlerware : Before state",store.getState());
+      // console.log("MyLogMiddlerware : Dispatching ===>", action);
+      // console.log("MyLogMiddlerware : Before state",store.getState());
       const result = next(action);
-      console.log("MyLogMiddlerware : After state",store.getState());
+      //console.log("MyLogMiddlerware : After state",store.getState());
       return result;
     }
   }

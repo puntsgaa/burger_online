@@ -1,46 +1,35 @@
-import React, { Component } from 'react';
+import React,{ useState } from 'react';
 import Burger from '../../components/Burger';
 import BuildControls from '../../components/BuildControls';
 import Modal from '../../components/General/Modal';
-import OrderSummary from '../../components/OrderSummary';
-import Spinner from '../../components/General/Spinner';
-class BurgerBuilder extends Component {
+import OrderSummary from '../../components/OrderSummary'; 
+const BurgerBuilder = (props) => {
+  
+  const [confirm_order, setConfirmOrder] = useState(false);
+  const showConfirmModal = () => {
+    setConfirmOrder(true);
+  }
 
-  state = {
-    confirm_order: false,
-    last_custname: "",
-    loading: false
-  };
-      
-  showConfirmModal = () => {
-        this.setState({ confirm_order: true });
-      }
-
-  hideConfirmModal = () => {
-        this.setState({ confirm_order: false });
-      }
-  continueOrder = () => {
-        this.props.history.push({
+  const hideConfirmModal = () => {
+    setConfirmOrder(false);
+  }
+  const continueOrder = () => {
+        props.history.push({
           pathname: "/ship"
         });
-        this.hideConfirmModal();
+        hideConfirmModal();
       }
-
-  render() {
         return (<div>
-          <Modal show={this.state.confirm_order} hideConfirmModal={this.hideConfirmModal}>
-            {this.state.loading ? (<Spinner />) :
-              (<OrderSummary
-                hideModal={this.hideConfirmModal}
-                continueOrder={this.continueOrder}
-                />)
-            }
+          <Modal show={confirm_order} hideConfirmModal={hideConfirmModal}>
+              <OrderSummary
+                hideModal={hideConfirmModal}
+                continueOrder={continueOrder}
+                />
           </Modal>
           <Burger/>
           <BuildControls
-            showConfirmModal={this.showConfirmModal} />
+            showConfirmModal={showConfirmModal} />
         </div>
-        )
+        ); 
       }
-    }
    export default BurgerBuilder;

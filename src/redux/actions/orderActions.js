@@ -66,3 +66,9 @@ export const orderFail = (error) =>{
         error: error
     };
 };
+
+export const clearOrder = () =>{
+    return{
+        type: "CLEAR_ORDER"
+    };
+};

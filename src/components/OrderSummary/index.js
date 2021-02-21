@@ -1,17 +1,19 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import css from './style.module.css';
 import Button from '../General/Button';
-import { connect } from "react-redux";
+//import { connect } from "react-redux";
+import BurgerContext from "../../context/BurgerContext";
 const OrderSummary = props => {
+    const ctx = useContext(BurgerContext);
     return(<div className={css}>
             <h3>Таны захиалга</h3>
             <p>Таны сонгосон орцууд</p>
             <ul>
-                {Object.keys(props.ingredients).map(el => (
-                    <li key={el}>{props.controls[el]}:{props.ingredients[el]}</li>
+                {Object.keys(ctx.burger.ingredients).map(el => (
+                    <li key={el}>{ctx.burger.controls[el]}:{ctx.burger.ingredients[el]}</li>
                 )) }
             </ul>
-                <p>Нийт үнэ: <strong>{props.total_price}₮</strong></p>
+                <p>Нийт үнэ: <strong>{ctx.burger.total_price}₮</strong></p>
             <p>Цаашаа үргэлжлүүлэх үү?</p>
             <Button btntype="Danger" function={props.hideModal} text="Татгалзах"/>
             <Button btntype="Success" function={props.continueOrder} text="Үргэлжлүүлэх"/>
@@ -19,12 +21,13 @@ const OrderSummary = props => {
     );
 };
 
-const mapStateToProps = (state) => {
-    return {
-        ingredients: state.burgerReducer.ingredients,
-        controls: state.burgerReducer.controls,
-        total_price: state.burgerReducer.total_price
-    }
-}
+// const mapStateToProps = (state) => {
+//     return {
+//         ingredients: state.burgerReducer.ingredients,
+//         controls: state.burgerReducer.controls,
+//         total_price: state.burgerReducer.total_price
+//     }
+// }
 
-export default connect(mapStateToProps)(OrderSummary);
+//export default connect(mapStateToProps)(OrderSummary);
+export default OrderSummary;
